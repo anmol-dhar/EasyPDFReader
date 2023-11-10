@@ -26,6 +26,11 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         this.list = list;
     }
 
+    public void filterList(List<File> list) {
+        this.list = list;
+        this.notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public Adapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -38,6 +43,16 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         File file = list.get(position);
         holder.name.setText(file.getName());
         holder.path.setText(file.getPath());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, Viewer.class);
+                intent.putExtra("name", file.getName());
+                intent.putExtra("path", file.getPath());
+                context.startActivity(intent);
+            }
+        });
 
         holder.share.setOnClickListener(new View.OnClickListener() {
             @Override

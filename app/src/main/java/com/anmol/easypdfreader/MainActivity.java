@@ -67,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
+        setupSearchView();
+
         new Thread(()->{
             List<File> files = getallFiles();
             Collections.sort(files, new Comparator<File>() {
@@ -86,6 +88,38 @@ public class MainActivity extends AppCompatActivity {
             });
 
         }).start();
+    }
+
+    private void setupSearchView() {
+        SearchView searchView = findViewById(R.id.searchView);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (newText!=null) {
+                    filter(newText);
+                }
+                else{
+                    Toast.makeText(MainActivity.this, "No File Found", Toast.LENGTH_SHORT).show();
+                }
+                return false;
+            }
+        });
+    }
+
+    private void filter(String newText) {
+        List<File> filterlist = new ArrayList<>();
+        for (File item : list){
+            if (item.getName().toLowerCase().contains(newText)){
+                filterlist.add(item);
+            }
+        }
+        adapter.filterList(filterlist);
     }
 
     private List<File> getallFiles() {
