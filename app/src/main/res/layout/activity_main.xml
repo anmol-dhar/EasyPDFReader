@@ -8,7 +8,7 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/EasyPDF_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
@@ -19,23 +19,23 @@
         android:text="EasyPDF" />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/Reader_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
-        android:layout_toRightOf="@id/textView"
+        android:layout_toRightOf="@id/EasyPDF_text"
         android:textColor="@color/red_color"
         android:fontFamily="@font/poppins_semibold"
         android:textSize="30sp"
         android:text=" Reader" />
 
     <View
-        android:id="@+id/view"
+        android:id="@+id/EasyPDF_line"
         android:layout_width="wrap_content"
         android:layout_height="3dp"
-        android:layout_below="@id/textView"
-        android:layout_alignStart="@+id/textView"
-        android:layout_alignEnd="@id/textView"
+        android:layout_below="@id/EasyPDF_text"
+        android:layout_alignStart="@+id/EasyPDF_text"
+        android:layout_alignEnd="@id/EasyPDF_text"
         android:background="@drawable/round"
         android:backgroundTint="@color/white" />
 
@@ -43,7 +43,7 @@
         android:id="@+id/searchView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/view"
+        android:layout_below="@id/EasyPDF_line"
         android:layout_marginStart="15dp"
         android:layout_marginTop="15dp"
         android:layout_marginEnd="15dp"
