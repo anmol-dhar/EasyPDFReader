@@ -1,14 +1,131 @@
 package com.anmol.easypdfreader;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.Toast;
+import android.Manifest;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    RecyclerView recyclerView;
+    Adapter adapter;
+    List<File> list;
+    ProgressBar progressBar;
+    SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        initvar();
+        checkPermission();
+
+    }
+
+    private void checkPermission() {
+        Dexter.withContext(this).withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
+                        Log.d("MyApp", "Permissions checked.");
+                        setuprv();
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
+                        Log.d("MyApp", "Permission rationale shown.");
+                        permissionToken.continuePermissionRequest();
+                    }
+                })
+                .check();
+    }
+
+    private void setuprv() {
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setHasFixedSize(true);
+
+        new Thread(()->{
+            List<File> files = getallFiles();
+            Collections.sort(files, new Comparator<File>() {
+                @Override
+                public int compare(File o1, File o2) {
+                    return Long.valueOf(o2.lastModified()).compareTo(o1.lastModified());
+                }
+            });
+            list.addAll(files);
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    adapter = new Adapter(MainActivity.this, list);
+                    recyclerView.setAdapter(adapter);
+                    handleProgressBar();
+                }
+            });
+
+        }).start();
+    }
+
+    private List<File> getallFiles() {
+        Uri uri = MediaStore.Files.getContentUri("external");
+
+        String[] projection = {MediaStore.Files.FileColumns.DATA};
+        String selection = MediaStore.Files.FileColumns.MIME_TYPE + "=?";
+        String[] selectionArgs = {"application/pdf"};
+
+        Cursor cursor = getContentResolver().query(uri, projection, selection, selectionArgs, null);
+
+        int pdfPathIndex = cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA);
+
+        ArrayList<File> list = new ArrayList<>();
+
+        while (cursor.moveToNext()) {
+            if (pdfPathIndex != -1) {
+                String pdfPath = cursor.getString(pdfPathIndex);
+                File pdfFile = new File(pdfPath);
+                if (pdfFile.exists() && pdfFile.isFile()) {
+                    list.add(pdfFile);
+                }
+            }
+        }
+        cursor.close();
+        return list;
+    }
+
+    private void handleProgressBar() {
+        progressBar.setVisibility(View.GONE);
+        if (adapter.getItemCount() == 0) {
+            Toast.makeText(this, "No Pdf File in Phone", Toast.LENGTH_SHORT).show();
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void initvar() {
+        recyclerView = findViewById(R.id.rv_files);
+        progressBar = findViewById(R.id.progressBar);
+        list = new ArrayList<>();
     }
 }
