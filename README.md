@@ -15,7 +15,6 @@ EasyPDFReader is a simple and lightweight PDF reader app for Android, built usin
 <p align="center">
   <img src="Screenshots/screenshot%201.png" width="300">&nbsp;&nbsp;&nbsp;
   <img src="Screenshots/screenshot%202.png" width="300">&nbsp;&nbsp;&nbsp;
-  <img src="Screenshots/screenshot%203.png" width="300">
 </p>
 
 # Getting Started
