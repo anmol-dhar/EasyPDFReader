@@ -1,15 +1,22 @@
 package com.anmol.easypdfreader;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
+import android.provider.Settings;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.Manifest;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -33,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
     Adapter adapter;
     List<File> list;
     ProgressBar progressBar;
-    SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,23 +50,70 @@ public class MainActivity extends AppCompatActivity {
         checkPermission();
 
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && Environment.isExternalStorageManager()) {
+            setuprv();
+        }
+    }
 
     private void checkPermission() {
-        Dexter.withContext(this).withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .withListener(new MultiplePermissionsListener() {
-                    @Override
-                    public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
-                        Log.d("MyApp", "Permissions checked.");
-                        setuprv();
-                    }
 
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
-                        Log.d("MyApp", "Permission rationale shown.");
-                        permissionToken.continuePermissionRequest();
-                    }
-                })
-                .check();
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
+            if(Environment.isExternalStorageManager()){
+                setuprv();
+            }
+            else{
+                showStoragePermissionDialog();
+            }
+        }
+        else{
+            Dexter.withContext(this).withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    .withListener(new MultiplePermissionsListener() {
+                        @Override
+                        public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
+                            setuprv();
+                        }
+
+                        @Override
+                        public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
+                            permissionToken.continuePermissionRequest();
+                        }
+                    })
+                    .check();
+        }
+    }
+
+    private void showStoragePermissionDialog() {
+        AlertDialog.Builder builder;
+        builder = new AlertDialog.Builder(this);
+        builder.setTitle("Storage Permission");
+        builder.setMessage("This app needs storage permission to function properly.");
+        builder.setPositiveButton("Allow", new DialogInterface.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.R)
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                try {
+                    Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                    intent.addCategory("android.intent.category.DEFAULT");
+                    intent.setData(Uri.parse(String.format("package:%s", getApplicationContext().getPackageName())));
+                    startActivityIfNeeded(intent, 101);
+                }
+                catch (Exception e) {
+                    Intent intent = new Intent();
+                    intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                    startActivityIfNeeded(intent, 101);
+                }
+            }
+        });
+        builder.setNegativeButton("Deny", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Toast.makeText(MainActivity.this, "Permission Denied", Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder.show();
     }
 
     private void setuprv() {
@@ -69,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
 
         setupSearchView();
 
-        new Thread(()->{
+        new Thread(() -> {
             List<File> files = getallFiles();
             Collections.sort(files, new Comparator<File>() {
                 @Override
@@ -77,16 +130,23 @@ public class MainActivity extends AppCompatActivity {
                     return Long.valueOf(o2.lastModified()).compareTo(o1.lastModified());
                 }
             });
+
+            list.clear();
             list.addAll(files);
-            this.runOnUiThread(new Runnable() {
+
+            runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    adapter = new Adapter(MainActivity.this, list);
-                    recyclerView.setAdapter(adapter);
+                    if (adapter == null) {
+                        adapter = new Adapter(MainActivity.this, list);
+                        recyclerView.setAdapter(adapter);
+                    }
+                    else {
+                        adapter.notifyDataSetChanged();
+                    }
                     handleProgressBar();
                 }
             });
-
         }).start();
     }
 
