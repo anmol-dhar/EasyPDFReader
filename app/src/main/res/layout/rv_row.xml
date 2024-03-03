@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:layout_marginEnd="11dp"
-        android:layout_toStartOf="@+id/share_btn"
+        android:layout_toStartOf="@+id/options_btn"
         android:layout_toEndOf="@id/pdf_image"
         android:fontFamily="@font/poppins_semibold"
         android:text="Pdf File Name"
@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/file_name"
         android:layout_marginEnd="11dp"
-        android:layout_toStartOf="@+id/share_btn"
+        android:layout_toStartOf="@+id/options_btn"
         android:layout_toEndOf="@id/pdf_image"
         android:fontFamily="@font/poppins"
         android:text="/storage/0/sample/filepath.pdf"
@@ -44,17 +44,16 @@
 
 
     <ImageView
-        android:id="@+id/share_btn"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
+        android:id="@+id/options_btn"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="15dp"
         android:layout_marginTop="15dp"
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="15dp"
         android:layout_centerVertical="true"
-
-        app:srcCompat="@drawable/ic_share" />
+        app:srcCompat="@drawable/three_dot_icon" />
 
     <View
         android:id="@+id/line_under_pdf_files"

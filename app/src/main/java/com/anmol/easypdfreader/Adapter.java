@@ -2,15 +2,15 @@ package com.anmol.easypdfreader;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ShareCompat;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
@@ -54,15 +54,10 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
             }
         });
 
-        holder.share.setOnClickListener(new View.OnClickListener() {
+        holder.option.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = ShareCompat.IntentBuilder.from(context).setText("application/pdf")
-                        .setStream(Uri.parse(file.getPath()))
-                        .setChooserTitle("Choose app")
-                        .createChooserIntent()
-                        .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                context.startActivity(intent);
+                popupMenu(v, file);
             }
         });
     }
@@ -74,15 +69,40 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView name, path;
-        ImageView share;
+        ImageView option;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             name = itemView.findViewById(R.id.file_name);
             path = itemView.findViewById(R.id.file_path);
-            share = itemView.findViewById(R.id.share_btn);
+            option = itemView.findViewById(R.id.options_btn);
 
+        }
+    }
+
+    public void popupMenu(View view, File file){
+        PopupMenu popupMenu = new PopupMenu(view.getContext(), view);
+        popupMenu.inflate(R.menu.option_menu);
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int id = item.getItemId();
+                if (id == R.id.popup_delete_btn) {
+                    deleteFile(file);
+                    return true;
+                }
+                return false;
+            }
+        });
+        popupMenu.show();
+    }
+
+    public void deleteFile(File file) {
+        boolean deleted = file.delete();
+        if (deleted) {
+            list.remove(file);
+            notifyDataSetChanged();
         }
     }
 }
