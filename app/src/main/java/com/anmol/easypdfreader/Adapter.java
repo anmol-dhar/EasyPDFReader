@@ -2,6 +2,7 @@ package com.anmol.easypdfreader;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.core.app.ShareCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
@@ -92,6 +94,10 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
                     deleteFile(file);
                     return true;
                 }
+                else if (id == R.id.popup_share_btn){
+                    shareFile(file);
+                    return true;
+                }
                 return false;
             }
         });
@@ -104,5 +110,14 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
             list.remove(file);
             notifyDataSetChanged();
         }
+    }
+
+    public void shareFile(File file){
+        Intent shareIntent = ShareCompat.IntentBuilder.from(context).setType("application/pdf")
+                .setStream(Uri.parse(file.getPath()))
+                .setChooserTitle("Share PDF File")
+                .createChooserIntent()
+                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        context.startActivity(shareIntent);
     }
 }

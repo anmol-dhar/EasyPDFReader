@@ -5,4 +5,8 @@
         android:id="@+id/popup_delete_btn"
         android:title="Delete"
         android:icon="@drawable/delete_icon" />
+    <item
+        android:id="@+id/popup_share_btn"
+        android:title="Share"
+        android:icon="@drawable/share_icon" />
 </menu>
