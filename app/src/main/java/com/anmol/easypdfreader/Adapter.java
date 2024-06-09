@@ -16,7 +16,10 @@ import androidx.core.app.ShareCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
@@ -45,6 +48,8 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         File file = list.get(position);
         holder.name.setText(file.getName());
         holder.path.setText(file.getPath());
+        holder.date.setText(getFormattedDate(file.lastModified()));
+        holder.size.setText(getFormattedSize(file.length()));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,7 +75,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        TextView name, path;
+        TextView name, path, date, size;
         ImageView option;
 
         public ViewHolder(@NonNull View itemView) {
@@ -79,6 +84,8 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
             name = itemView.findViewById(R.id.file_name);
             path = itemView.findViewById(R.id.file_path);
             option = itemView.findViewById(R.id.options_btn);
+            date = itemView.findViewById(R.id.tv_date);
+            size = itemView.findViewById(R.id.tv_size);
 
         }
     }
@@ -120,4 +127,22 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
                 .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         context.startActivity(shareIntent);
     }
+
+    private String getFormattedDate(long timestamp) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy  hh:mm a", Locale.getDefault());
+        return sdf.format(new Date(timestamp));
+    }
+
+    public String getFormattedSize(long size) {
+        if (size < 1000) {
+            return size + " B";
+        } else if (size < 1000 * 1000) {
+            return String.format("%.2f KB", size / 1000.0);
+        } else if (size < 1000 * 1000 * 1000) {
+            return String.format("%.2f MB", size / (1000.0 * 1000));
+        } else {
+            return String.format("%.2f GB", size / (1000.0 * 1000 * 1000));
+        }
+    }
+
 }

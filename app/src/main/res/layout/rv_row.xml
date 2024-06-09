@@ -22,6 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:layout_marginEnd="11dp"
+        android:layout_marginBottom="3dp"
         android:layout_toStartOf="@+id/options_btn"
         android:layout_toEndOf="@id/pdf_image"
         android:fontFamily="@font/poppins_semibold"
@@ -40,7 +41,7 @@
         android:fontFamily="@font/poppins"
         android:text="/storage/0/sample/filepath.pdf"
         android:textColor="@color/white"
-        android:textSize="14sp" />
+        android:textSize="12sp" />
 
 
     <ImageView
@@ -55,11 +56,33 @@
         android:layout_centerVertical="true"
         app:srcCompat="@drawable/three_dot_icon" />
 
+    <TextView
+        android:id="@+id/tv_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/file_path"
+        android:layout_toStartOf="@+id/options_btn"
+        android:layout_toEndOf="@id/pdf_image"
+        android:fontFamily="@font/poppins"
+        android:layout_marginTop="4dp"
+        android:text="01/01/1970"
+        android:textColor="@color/grey_color" />
+
+    <TextView
+        android:id="@+id/tv_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/file_path"
+        android:layout_alignEnd="@+id/tv_date"
+        android:text="1.2 MB"
+        android:layout_marginTop="4dp"
+        android:textColor="@color/grey_color" />
+
     <View
         android:id="@+id/line_under_pdf_files"
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:layout_below="@+id/file_path"
+        android:layout_below="@+id/tv_date"
         android:layout_marginTop="15dp"
         android:background="@color/secondary_color" />
 
