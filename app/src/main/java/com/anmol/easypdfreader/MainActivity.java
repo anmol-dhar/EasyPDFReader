@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.Manifest;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     Adapter adapter;
     List<File> list;
     ProgressBar progressBar;
+    int scrollPosition = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,13 +50,38 @@ public class MainActivity extends AppCompatActivity {
         initvar();
         checkPermission();
 
+        if(savedInstanceState != null) {
+            scrollPosition = savedInstanceState.getInt("Scroll_position", 0);
+            recyclerView.scrollToPosition(scrollPosition);
+        }
+
     }
     @Override
     protected void onResume() {
         super.onResume();
-        //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && Environment.isExternalStorageManager()) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && Environment.isExternalStorageManager()) {
             setuprv();
-       // }
+        }
+
+        LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+        if (layoutManager != null) {
+            layoutManager.scrollToPosition(scrollPosition);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+        if (layoutManager != null) {
+            scrollPosition = layoutManager.findFirstVisibleItemPosition();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("Scroll_position", scrollPosition);
     }
 
     private void checkPermission() {
@@ -144,6 +171,11 @@ public class MainActivity extends AppCompatActivity {
                         adapter.notifyDataSetChanged();
                     }
                     handleProgressBar();
+
+                    LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                    if (layoutManager != null) {
+                        layoutManager.scrollToPosition(scrollPosition);
+                    }
                 }
             });
         }).start();
