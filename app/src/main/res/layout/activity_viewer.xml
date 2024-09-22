@@ -44,7 +44,7 @@
                 android:layout_toRightOf="@+id/back"
                 android:fontFamily="@font/poppins_medium"
                 android:text="TextView"
-                android:textColor="@color/white"
+                android:textColor="@color/heading_color"
                 android:textSize="20sp" />
         </RelativeLayout>
     </com.google.android.material.appbar.MaterialToolbar>

@@ -1,6 +1,7 @@
 package com.anmol.easypdfreader;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
@@ -16,6 +18,8 @@ import androidx.core.app.ShareCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -93,12 +97,39 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     public void popupMenu(View view, File file){
         PopupMenu popupMenu = new PopupMenu(view.getContext(), view);
         popupMenu.inflate(R.menu.option_menu);
+
+        try {
+            Field[] fields = popupMenu.getClass().getDeclaredFields();
+            for (Field field : fields) {
+                if ("mPopup".equals(field.getName())) {
+                    field.setAccessible(true);
+                    Object menuPopupHelper = field.get(popupMenu);
+                    Class<?> classPopupHelper = Class.forName(menuPopupHelper.getClass().getName());
+                    Method setForceIcons = classPopupHelper.getMethod("setForceShowIcon", boolean.class);
+                    setForceIcons.invoke(menuPopupHelper, true);
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 int id = item.getItemId();
                 if (id == R.id.popup_delete_btn) {
-                    deleteFile(file);
+                    new AlertDialog.Builder(context)
+                            .setTitle("Delete Confirmation")
+                            .setMessage("Are you sure you want to delete this file?")
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setPositiveButton("Yes", (dialog, which) -> {
+                                deleteFile(file);
+                            })
+                            .setNegativeButton("No", (dialog, which) -> {
+                                dialog.dismiss();
+                            })
+                            .show();
                     return true;
                 }
                 else if (id == R.id.popup_share_btn){
@@ -116,6 +147,10 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         if (deleted) {
             list.remove(file);
             notifyDataSetChanged();
+            Toast.makeText(context, "File Deleted", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Toast.makeText(context, "Something went wrong!", Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -1,89 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginTop="7dp"
+    android:layout_marginStart="7dp"
+    android:layout_marginEnd="7dp"
+    android:elevation="8dp"
+    app:cardCornerRadius="30dp"
     android:background="@color/background_color">
 
-    <ImageView
-        android:id="@+id/pdf_image"
-        android:layout_width="46dp"
-        android:layout_height="46dp"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginBottom="15dp"
-        app:srcCompat="@drawable/ic_pdf" />
-
-    <TextView
-        android:id="@+id/file_name"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="11dp"
-        android:layout_marginBottom="3dp"
-        android:layout_toStartOf="@+id/options_btn"
-        android:layout_toEndOf="@id/pdf_image"
-        android:fontFamily="@font/poppins_semibold"
-        android:text="Pdf File Name"
-        android:textColor="@color/white"
-        android:textSize="18sp" />
+        android:padding="16dp">
 
-    <TextView
-        android:id="@+id/file_path"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/file_name"
-        android:layout_marginEnd="11dp"
-        android:layout_toStartOf="@+id/options_btn"
-        android:layout_toEndOf="@id/pdf_image"
-        android:fontFamily="@font/poppins"
-        android:text="/storage/0/sample/filepath.pdf"
-        android:textColor="@color/white"
-        android:textSize="12sp" />
+        <ImageView
+            android:id="@+id/pdf_image"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="15dp"
+            app:srcCompat="@drawable/ic_pdf" />
 
+        <TextView
+            android:id="@+id/file_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/pdf_image"
+            android:layout_marginEnd="11dp"
+            android:paddingEnd="11dp"
+            android:fontFamily="@font/poppins_semibold"
+            android:text="Pdf File Name"
+            android:textColor="@color/heading_color"
+            android:textSize="18sp" />
 
-    <ImageView
-        android:id="@+id/options_btn"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginBottom="15dp"
-        android:layout_centerVertical="true"
-        app:srcCompat="@drawable/three_dot_icon" />
+        <TextView
+            android:id="@+id/file_path"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/file_name"
+            android:layout_toEndOf="@id/pdf_image"
+            android:layout_marginEnd="11dp"
+            android:paddingEnd="11dp"
+            android:fontFamily="@font/poppins"
+            android:text="/storage/0/sample/filepath.pdf"
+            android:textColor="@color/heading_color"
+            android:textSize="12sp" />
 
-    <TextView
-        android:id="@+id/tv_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/file_path"
-        android:layout_toStartOf="@+id/options_btn"
-        android:layout_toEndOf="@id/pdf_image"
-        android:fontFamily="@font/poppins"
-        android:layout_marginTop="4dp"
-        android:text="01/01/1970"
-        android:textColor="@color/grey_color" />
+        <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/file_path"
+            android:layout_toEndOf="@id/pdf_image"
+            android:layout_marginTop="4dp"
+            android:text="01/01/1970"
+            android:textColor="@color/grey_color"
+            android:textSize="12sp" />
 
-    <TextView
-        android:id="@+id/tv_size"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/file_path"
-        android:layout_alignEnd="@+id/tv_date"
-        android:text="1.2 MB"
-        android:layout_marginTop="4dp"
-        android:textColor="@color/grey_color" />
+        <TextView
+            android:id="@+id/tv_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/file_path"
+            android:layout_toEndOf="@id/tv_date"
+            android:layout_marginStart="70dp"
+            android:layout_marginTop="4dp"
+            android:text="1.2 MB"
+            android:textColor="@color/grey_color"
+            android:textSize="12sp" />
 
-    <View
-        android:id="@+id/line_under_pdf_files"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_below="@+id/tv_date"
-        android:layout_marginTop="15dp"
-        android:background="@color/secondary_color" />
+        <ImageView
+            android:id="@+id/options_btn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            app:srcCompat="@drawable/three_dot_icon" />
 
-</RelativeLayout>
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

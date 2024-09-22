@@ -210,7 +210,9 @@ public class MainActivity extends AppCompatActivity {
                 filterlist.add(item);
             }
         }
-        adapter.filterList(filterlist);
+        if (adapter != null) {
+            adapter.filterList(filterlist);
+        }
     }
 
     private List<File> getallFiles() {
