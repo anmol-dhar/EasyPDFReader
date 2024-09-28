@@ -1,4 +1,4 @@
-package com.anmol.easypdfreader;
+package com.fusionstudios.easypdfreader.Activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,6 +10,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.Manifest;
@@ -22,6 +23,10 @@ import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.fusionstudios.easypdfreader.Adapters.Adapter;
+import com.fusionstudios.easypdfreader.Ads.AdServices;
+import com.fusionstudios.easypdfreader.R;
+import com.google.android.gms.ads.MobileAds;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -41,11 +46,19 @@ public class MainActivity extends AppCompatActivity {
     List<File> list;
     ProgressBar progressBar;
     int scrollPosition = 0;
+    LinearLayout container;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        container = findViewById(R.id.adContainer);
+
+        new Thread(() -> {
+            MobileAds.initialize(this, initializationStatus -> {});
+        }).start();
+
+        AdServices.loadBannerAds(container, this);
 
         initvar();
         checkPermission();

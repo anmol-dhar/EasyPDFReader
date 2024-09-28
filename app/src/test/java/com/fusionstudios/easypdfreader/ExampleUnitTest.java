@@ -1,4 +1,4 @@
-package com.anmol.easypdfreader;
+package com.fusionstudios.easypdfreader;
 
 import org.junit.Test;
 

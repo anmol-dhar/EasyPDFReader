@@ -1,4 +1,4 @@
-package com.anmol.easypdfreader;
+package com.fusionstudios.easypdfreader.Adapters;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -16,6 +16,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.core.app.ShareCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.fusionstudios.easypdfreader.R;
+import com.fusionstudios.easypdfreader.Activities.Viewer;
 
 import java.io.File;
 import java.lang.reflect.Field;

@@ -3,22 +3,23 @@ plugins {
 }
 
 android {
-    namespace = "com.anmol.easypdfreader"
+    namespace = "com.fusionstudios.easypdfreader"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.anmol.easypdfreader"
+        applicationId = "com.fusionstudios.easypdfreader"
         minSdk = 24
         targetSdk = 33
         versionCode = 1
-        versionName = "1.3"
+        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
@@ -37,5 +38,6 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     implementation ("com.karumi:dexter:6.2.3")
+    implementation("com.google.android.gms:play-services-ads:23.3.0")
     implementation ("com.github.barteksc:android-pdf-viewer:2.8.2")
 }

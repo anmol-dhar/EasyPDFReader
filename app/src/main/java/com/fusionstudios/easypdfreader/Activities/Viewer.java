@@ -1,4 +1,4 @@
-package com.anmol.easypdfreader;
+package com.fusionstudios.easypdfreader.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ShareCompat;
@@ -6,10 +6,14 @@ import androidx.core.app.ShareCompat;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.fusionstudios.easypdfreader.Ads.AdServices;
+import com.fusionstudios.easypdfreader.R;
 import com.github.barteksc.pdfviewer.PDFView;
 
 import java.io.File;
@@ -21,11 +25,14 @@ public class Viewer extends AppCompatActivity {
     TextView title;
     String name,path;
     boolean ishide=false;
+    LinearLayout container;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_viewer);
 
+        loadAds();
         initvar();
 
     }
@@ -88,5 +95,20 @@ public class Viewer extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private void loadAds(){
+        container = findViewById(R.id.ad_container);
+
+        AdServices.loadBannerAds(container, this);
+
+        AdServices.loadFullscreenAds(this);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                AdServices.showFullscreenAds(Viewer.this);
+            }
+        }, 5000);
     }
 }

@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">EasyPDFReader</string>
+    <string name="app_name">EasyPDF Reader</string>
+    <string name="meta_data_app_id">ca-app-pub-3940256099942544~3347511713</string>
 </resources>
